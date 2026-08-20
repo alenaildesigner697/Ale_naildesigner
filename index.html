@@ -1,0 +1,732 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alê Nail Designer | Espaço de Beleza e Cuidados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-pattern {
+            background-color: #fdf2f4;
+            background-image: radial-gradient(#f472b6 0.75px, transparent 0.75px), radial-gradient(#f472b6 0.75px, #fdf2f4 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .nail-bg {
+            background: linear-gradient(135deg, rgba(253, 242, 244, 0.95), rgba(252, 231, 243, 0.95)), 
+                        url('https://images.unsplash.com/photo-1632345031435-8727f6c97d34?auto=format&fit=crop&q=80&w=1200');
+            background-blend-mode: overlay;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(244, 114, 182, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-rose-50/50 text-slate-800 antialiased">
+
+    <!-- CABEÇALHO -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-rose-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold font-serif text-rose-900 tracking-wide">Alê Nail Designer</span>
+                    <p class="text-xs text-rose-500 font-medium tracking-widest uppercase">Studio de Unhas</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#inicio" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">Início</a>
+                <a href="#servicos" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">Serviços</a>
+                <a href="#galeria" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">Galeria</a>
+                <a href="#faq" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">FAQ & Dúvidas</a>
+                <button onclick="openAdminModal()" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 transition">
+                    <i class="fa-solid fa-lock mr-1"></i> Admin
+                </button>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20um%20horário%20para%20cuidar%20das%20minhas%20unhas." 
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="bg-rose-600 hover:bg-rose-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg shadow-rose-600/30 transition transform hover:-translate-y-0.5 flex items-center space-x-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Agendar Unhas</span>
+                </a>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-slate-600 hover:text-rose-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Telemóvel -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-rose-100 px-4 pt-2 pb-4 space-y-2">
+            <a href="#inicio" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Início</a>
+            <a href="#servicos" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Serviços</a>
+            <a href="#galeria" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Galeria</a>
+            <a href="#faq" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">FAQ & Dúvidas</a>
+            <button onclick="openAdminModal()" class="w-full text-left py-2 text-rose-600 font-medium">
+                <i class="fa-solid fa-lock mr-1"></i> Painel Administrativo
+            </button>
+        </div>
+    </header>
+
+    <!-- SEÇÃO INICIAL -->
+    <section id="inicio" class="hero-pattern py-20 lg:py-32 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-center lg:text-left">
+                    <span class="inline-block bg-rose-100 text-rose-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+                        ✨ A sua beleza nas pontas dos dedos
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-serif text-rose-950 leading-tight">
+                        Transforme as suas unhas em verdadeiras <span class="text-rose-600 italic">obras de arte</span>
+                    </h1>
+                    <p class="text-slate-600 text-lg max-w-xl mx-auto lg:mx-0">
+                        Especialista em alongamentos, blindagem, esmaltação em gel e nail arts exclusivas. Realce a sua elegância com um atendimento personalizado num ambiente acolhedor.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
+                        <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20um%20horário%20para%20cuidar%20das%20minhas%20unhas." 
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-semibold px-8 py-4 rounded-full shadow-xl shadow-rose-600/30 transition transform hover:-translate-y-1 text-center flex items-center justify-center space-x-3">
+                            <i class="fa-brands fa-whatsapp text-2xl"></i>
+                            <span class="text-base">Agendar Unhas Agora</span>
+                        </a>
+                        <a href="#servicos" class="w-full sm:w-auto bg-white hover:bg-rose-50 text-rose-800 font-semibold px-8 py-4 rounded-full border border-rose-200 transition text-center">
+                            Ver Serviços
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative flex justify-center">
+                    <div class="w-72 sm:w-96 h-96 sm:h-[450px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative z-10 bg-rose-100">
+                        <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800" alt="Nail Design Profissional" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE SERVIÇOS -->
+    <section id="servicos" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-rose-600 text-xs font-bold uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">Menu de Cuidados</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-serif text-rose-950 mt-3">Serviços Especializados</h2>
+                <p class="text-slate-600 mt-2">Escolha o tratamento ideal para deixar as suas unhas impecáveis, fortes e cheias de estilo.</p>
+            </div>
+
+            <div id="servicesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DA GALERIA -->
+    <section id="galeria" class="py-20 nail-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-rose-600 text-xs font-bold uppercase tracking-widest bg-white/80 px-3 py-1 rounded-full shadow-sm">Portfólio</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-serif text-rose-950 mt-3">Inspirações & Trabalhos</h2>
+                <p class="text-slate-600 mt-2">Um pouco do amor e dedicação em cada detalhe entregue às minhas clientes.</p>
+            </div>
+
+            <div id="galleryContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO FAQ & DÚVIDAS -->
+    <section id="faq" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-rose-600 text-xs font-bold uppercase tracking-widest bg-rose-50 px-3 py-1 rounded-full">Esclarecimentos</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-serif text-rose-950 mt-3">FAQ & Dúvidas Frequentes</h2>
+                <p class="text-slate-600 mt-2">Tire as suas dúvidas sobre agendamentos, durabilidade e cuidados com as unhas.</p>
+            </div>
+
+            <div class="space-y-4" id="faqContainer"></div>
+        </div>
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="bg-rose-950 text-rose-100 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center border-b border-rose-900 pb-8">
+                <div>
+                    <h3 class="text-xl font-serif font-bold text-white">Alê Nail Designer</h3>
+                    <p class="text-sm text-rose-300 mt-1">Beleza, sofisticação e cuidado em cada detalhe.</p>
+                </div>
+                <div class="flex flex-col md:items-center">
+                    <p class="text-sm text-rose-300"><i class="fa-solid fa-phone mr-2 text-rose-400"></i> +55 (31) 99221-2015</p>
+                    <p class="text-sm text-rose-300 mt-1"><i class="fa-solid fa-location-dot mr-2 text-rose-400"></i> Caeté - MG</p>
+                </div>
+                <div class="flex md:justify-end space-x-4">
+                    <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20um%20horário." target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-rose-900 flex items-center justify-center hover:bg-rose-600 transition text-white" title="WhatsApp">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                    </a>
+                    <a href="https://www.instagram.com/ale.naildesigner?igsh=YzA0bG5sYmJsYXYz&igsi=YzA0bG5sYmJsYXYz" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-rose-900 flex items-center justify-center hover:bg-rose-600 transition text-white" title="Instagram">
+                        <i class="fa-brands fa-instagram text-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-rose-400">
+                <p>&copy; 2026 Alê Nail Designer. Todos os direitos reservados.</p>
+                <button onclick="openAdminModal()" class="mt-4 sm:mt-0 hover:text-white underline">Painel Administrativo</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DE NOTIFICAÇÃO/CONFIRMAÇÃO CUSTOMIZADO -->
+    <div id="customModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-rose-100 text-center">
+            <div id="customModalIcon" class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="customModalTitle" class="text-lg font-bold font-serif text-slate-900 mb-2">Confirmação</h3>
+            <p id="customModalText" class="text-xs text-slate-600 mb-6">Tem a certeza que deseja realizar esta ação?</p>
+            <div id="customModalActions" class="flex space-x-3">
+                <button id="customModalCancel" onclick="closeCustomModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition">
+                    Cancelar
+                </button>
+                <button id="customModalConfirm" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGIN ADMIN -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-rose-100">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 class="text-xl font-bold font-serif text-slate-900">Painel Administrativo</h3>
+                <p class="text-xs text-slate-500 mt-1">Introduza a palavra-passe para gerir o site.</p>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Palavra-passe de Acesso</label>
+                    <input type="password" id="adminPasswordInput" placeholder="••••••••••••••" required autocomplete="current-password"
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                </div>
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm">
+                    Entrar no Painel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAINEL ADMINISTRATIVO (DASHBOARD) -->
+    <div id="adminDashboard" class="fixed inset-0 bg-slate-100 z-50 hidden overflow-y-auto">
+        <div class="bg-rose-900 text-white shadow-md sticky top-0 z-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-rose-800 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold font-serif">Painel de Controlo - Alê Nail Designer</h2>
+                        <p class="text-xs text-rose-200">Gestão de Serviços e Galeria</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminDashboard()" class="bg-rose-800 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Sair do Painel
+                </button>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+            <!-- Estatísticas -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-hand-sparkles"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium">Serviços Ativos</p>
+                        <h4 id="statServicesCount" class="text-2xl font-bold text-slate-800">0</h4>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-rose-100 flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-images"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium">Fotos na Galeria</p>
+                        <h4 id="statGalleryCount" class="text-2xl font-bold text-slate-800">0</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GESTÃO DE SERVIÇOS -->
+            <div class="bg-white rounded-2xl shadow-sm border border-rose-100 p-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold font-serif text-slate-900">Gerir Serviços</h3>
+                        <p class="text-xs text-slate-500">Adicione, edite ou remova serviços do catálogo.</p>
+                    </div>
+                    <button onclick="openServiceModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Novo Serviço
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-xs font-semibold text-slate-400 uppercase">
+                                <th class="py-3 px-4">Serviço</th>
+                                <th class="py-3 px-4">Descrição</th>
+                                <th class="py-3 px-4">Preço</th>
+                                <th class="py-3 px-4 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminServicesTableBody" class="text-sm text-slate-600 divide-y divide-slate-50"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GESTÃO DE GALERIA -->
+            <div class="bg-white rounded-2xl shadow-sm border border-rose-100 p-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold font-serif text-slate-900">Gerir Galeria de Inspirações</h3>
+                        <p class="text-xs text-slate-500">Envie fotos diretamente do seu dispositivo ou adicione por link.</p>
+                    </div>
+                    <button onclick="openGalleryModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Adicionar Foto
+                    </button>
+                </div>
+                <div id="adminGalleryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE SERVIÇO -->
+    <div id="serviceModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-rose-100">
+            <button onclick="closeServiceModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 id="serviceModalTitle" class="text-xl font-bold font-serif text-slate-900 mb-4">Adicionar Novo Serviço</h3>
+            <form onsubmit="handleSaveService(event)" class="space-y-4">
+                <input type="hidden" id="serviceEditId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nome do Serviço</label>
+                    <input type="text" id="newServiceName" placeholder="Ex: Blindagem de Unhas" required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Descrição Curta</label>
+                    <textarea id="newServiceDesc" placeholder="Explique brevemente o procedimento..." rows="2" required
+                              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Preço</label>
+                    <input type="text" id="newServicePrice" placeholder="R$ 80,00" required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">URL da Imagem Hospedada</label>
+                    <input type="url" id="newServiceImg" placeholder="https://images.unsplash.com/..." required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                </div>
+                <div class="pt-2 flex space-x-3">
+                    <button type="button" onclick="closeServiceModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                        Guardar Serviço
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE GALERIA COM UPLOAD DO DISPOSITIVO -->
+    <div id="galleryModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-rose-100">
+            <button onclick="closeGalleryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-xl font-bold font-serif text-slate-900 mb-4">Adicionar Foto à Galeria</h3>
+            
+            <form onsubmit="handleSaveGallery(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Título / Legenda da Foto</label>
+                    <input type="text" id="newGalleryTitle" placeholder="Ex: Nail Art Rosa" required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Escolher Foto da Galeria do Celular / Computador</label>
+                    <input type="file" id="galleryFileInput" accept="image/*" onchange="previewFileImage(event)"
+                           class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
+                </div>
+
+                <div class="text-center text-xs text-slate-400 font-medium">OU</div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Colar URL da Imagem da Web</label>
+                    <input type="url" id="newGalleryUrl" placeholder="https://..." 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
+                </div>
+
+                <div class="pt-2 flex space-x-3">
+                    <button type="button" onclick="closeGalleryModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                        Adicionar Foto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPTS E LÓGICA DE FUNCIONAMENTO -->
+    <script>
+        let services = [
+            {
+                id: 1,
+                name: "Alongamento em Fibra de Vidro",
+                description: "Técnica duradoura, natural e super resistente para unhas longas perfeitas.",
+                price: "R$ 150,00",
+                image: "https://images.unsplash.com/photo-1607779097040-26e8097ee4c5?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 2,
+                name: "Esmaltação em Gel",
+                description: "Brilho intenso e durabilidade de até 20 dias sem descascar.",
+                price: "R$ 90,00",
+                image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 3,
+                name: "Blindagem de Unhas",
+                description: "Proteção extra para unhas naturais quebradiças, promovendo crescimento saudável.",
+                price: "R$ 80,00",
+                image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: 4,
+                name: "Nail Art Personalizada",
+                description: "Decorações artísticas feitas à mão, francesinhas modernas e pedrarias.",
+                price: "A partir de R$ 30",
+                image: "https://images.unsplash.com/photo-1562886826-27f42c4b0afc?auto=format&fit=crop&q=80&w=600"
+            }
+        ];
+
+        let gallery = [
+            { id: 1, title: "Esmaltação em Gel", url: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=600" },
+            { id: 2, title: "Nail Art Minimalista", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+            { id: 3, title: "Alongamento Fibra", url: "https://images.unsplash.com/photo-1607779097040-26e8097ee4c5?auto=format&fit=crop&q=80&w=600" },
+            { id: 4, title: "Manicure Clássica", url: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=600" }
+        ];
+
+        let faqs = [
+            { question: "Como faço para agendar um horário?", answer: "Basta clicar em qualquer botão 'Agendar Unhas' para ser redirecionado ao nosso WhatsApp (+55 31 99221-2015)." },
+            { question: "Quanto tempo dura o alongamento?", answer: "Dura por tempo indeterminado com manutenções a cada 20 a 25 dias." },
+            { question: "Os materiais são esterilizados?", answer: "Sim, utilizamos autoclave e materiais descartáveis ou esterilizados individualmente." }
+        ];
+
+        let uploadedFileBase64 = '';
+
+        function showCustomConfirm(title, message, onConfirm) {
+            document.getElementById('customModalTitle').innerText = title;
+            document.getElementById('customModalText').innerText = message;
+            const confirmBtn = document.getElementById('customModalConfirm');
+            
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.onclick = function() {
+                closeCustomModal();
+                onConfirm();
+            };
+
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        function previewFileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedFileBase64 = e.target.result;
+                    document.getElementById('newGalleryUrl').value = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderServices() {
+            const container = document.getElementById('servicesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            services.forEach(service => {
+                container.innerHTML += `
+                    <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-rose-100">
+                        <div>
+                            <div class="h-48 overflow-hidden relative bg-rose-100">
+                                <img src="${service.image}" alt="${service.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-rose-700 font-bold text-xs px-3 py-1 rounded-full shadow">
+                                    ${service.price}
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold font-serif text-rose-950 mb-2">${service.name}</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">${service.description}</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20o%20serviço:%20${encodeURIComponent(service.name)}" 
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="w-full bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white text-sm font-semibold py-2.5 rounded-xl border border-rose-200 transition text-center flex items-center justify-center space-x-2">
+                                <i class="fa-brands fa-whatsapp text-base"></i>
+                                <span>Agendar este serviço</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            gallery.forEach(item => {
+                container.innerHTML += `
+                    <div class="rounded-2xl overflow-hidden shadow-md group relative h-64 bg-rose-100">
+                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-rose-950/70 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                            <span class="text-white text-sm font-medium">${item.title}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFaq() {
+            const container = document.getElementById('faqContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            faqs.forEach((faq, index) => {
+                container.innerHTML += `
+                    <div class="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+                        <button onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none">
+                            <span>${faq.question}</span>
+                            <i id="faqIcon-${index}" class="fa-solid fa-chevron-down text-rose-500 transition transform"></i>
+                        </button>
+                        <div id="faqAns-${index}" class="hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3">
+                            ${faq.answer}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleFaq(index) {
+            const ans = document.getElementById(`faqAns-${index}`);
+            const icon = document.getElementById(`faqIcon-${index}`);
+            ans.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // Sistema Admin
+        function openAdminModal() { document.getElementById('adminModal').classList.remove('hidden'); }
+        function closeAdminModal() { 
+            document.getElementById('adminModal').classList.add('hidden'); 
+            document.getElementById('adminPasswordInput').value = ''; 
+        }
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === 'ale_naildesigner') {
+                closeAdminModal();
+                openAdminDashboard();
+            } else {
+                showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
+            }
+        }
+        function openAdminDashboard() {
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            updateAdminDashboard();
+        }
+        function closeAdminDashboard() { document.getElementById('adminDashboard').classList.add('hidden'); }
+
+        function updateAdminDashboard() {
+            document.getElementById('statServicesCount').innerText = services.length;
+            document.getElementById('statGalleryCount').innerText = gallery.length;
+
+            const tbody = document.getElementById('adminServicesTableBody');
+            tbody.innerHTML = '';
+            services.forEach(serv => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
+                            <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
+                            <span>${serv.name}</span>
+                        </td>
+                        <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
+                        <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
+                        <td class="py-3 px-4 text-right space-x-2">
+                            <button type="button" onclick="editService(${serv.id})" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button type="button" onclick="deleteService(${serv.id})" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Excluir">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const grid = document.getElementById('adminGalleryGrid');
+            grid.innerHTML = '';
+            gallery.forEach(item => {
+                grid.innerHTML += `
+                    <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
+                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
+                            <span class="text-white text-xs font-semibold truncate">${item.title}</span>
+                            <button type="button" onclick="deleteGalleryItem(${item.id})" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs" title="Remover Foto">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Gestão de Serviços
+        function openServiceModal(isEdit = false, id = null) {
+            document.getElementById('serviceModal').classList.remove('hidden');
+            if (isEdit && id) {
+                document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
+                const serv = services.find(s => s.id === id);
+                document.getElementById('serviceEditId').value = serv.id;
+                document.getElementById('newServiceName').value = serv.name;
+                document.getElementById('newServiceDesc').value = serv.description;
+                document.getElementById('newServicePrice').value = serv.price;
+                document.getElementById('newServiceImg').value = serv.image;
+            } else {
+                document.getElementById('serviceModalTitle').innerText = "Adicionar Novo Serviço";
+                document.getElementById('serviceEditId').value = '';
+                document.getElementById('newServiceName').value = '';
+                document.getElementById('newServiceDesc').value = '';
+                document.getElementById('newServicePrice').value = '';
+                document.getElementById('newServiceImg').value = '';
+            }
+        }
+        function closeServiceModal() { document.getElementById('serviceModal').classList.add('hidden'); }
+
+        function handleSaveService(e) {
+            e.preventDefault();
+            const editId = document.getElementById('serviceEditId').value;
+            const name = document.getElementById('newServiceName').value;
+            const desc = document.getElementById('newServiceDesc').value;
+            const price = document.getElementById('newServicePrice').value;
+            const image = document.getElementById('newServiceImg').value;
+
+            if (editId !== '') {
+                const idNum = Number(editId);
+                services = services.map(s => s.id === idNum ? { id: idNum, name, description: desc, price, image } : s);
+            } else {
+                const newServ = { id: Date.now(), name, description: desc, price, image };
+                services.push(newServ);
+            }
+
+            renderServices();
+            updateAdminDashboard();
+            closeServiceModal();
+        }
+
+        function editService(id) { openServiceModal(true, id); }
+        function deleteService(id) {
+            showCustomConfirm("Excluir Serviço", "Tem a certeza que deseja excluir este serviço?", () => {
+                services = services.filter(s => s.id !== id);
+                renderServices();
+                updateAdminDashboard();
+            });
+        }
+
+        // Gestão de Galeria
+        function openGalleryModal() { 
+            document.getElementById('galleryModal').classList.remove('hidden'); 
+            document.getElementById('newGalleryTitle').value = '';
+            document.getElementById('newGalleryUrl').value = '';
+            document.getElementById('galleryFileInput').value = '';
+            uploadedFileBase64 = '';
+        }
+        
+        function closeGalleryModal() { document.getElementById('galleryModal').classList.add('hidden'); }
+
+        function handleSaveGallery(e) {
+            e.preventDefault();
+            const titleVal = document.getElementById('newGalleryTitle').value;
+            const urlInput = document.getElementById('newGalleryUrl').value;
+            
+            const finalImageUrl = uploadedFileBase64 || urlInput;
+
+            if (!finalImageUrl) {
+                showCustomConfirm("Aviso", "Por favor, selecione uma foto da galeria do seu dispositivo ou insira uma URL.", () => {});
+                return;
+            }
+
+            gallery.push({ id: Date.now(), title: titleVal, url: finalImageUrl });
+            renderGallery();
+            updateAdminDashboard();
+            closeGalleryModal();
+            e.target.reset();
+            uploadedFileBase64 = '';
+        }
+
+        function deleteGalleryItem(id) {
+            showCustomConfirm("Remover Foto", "Deseja remover esta foto da galeria?", () => {
+                gallery = gallery.filter(item => item.id !== id);
+                renderGallery();
+                updateAdminDashboard();
+            });
+        }
+
+        window.onload = function() {
+            renderServices();
+            renderGallery();
+            renderFaq();
+        };
+    </script>
+</body>
+</html>
+```

@@ -587,10 +587,10 @@
                             <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
                             <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
                             <td class="py-3 px-4 text-right space-x-2">
-                                <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition cursor-pointer" title="Editar">
+                                <button type="button" onclick="window.editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition cursor-pointer" title="Editar">
                                     <i class="fa-solid fa-pen"></i>
                                 </button>
-                                <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition cursor-pointer" title="Excluir">
+                                <button type="button" onclick="window.deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition cursor-pointer" title="Excluir">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </td>
@@ -608,7 +608,7 @@
                             <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
                                 <span class="text-white text-xs font-semibold truncate">${item.title}</span>
-                                <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs cursor-pointer" title="Remover Foto">
+                                <button type="button" onclick="window.deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs cursor-pointer" title="Remover Foto">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
@@ -694,7 +694,7 @@
         };
     </script>
 
-    <!-- SCRIPT DO FIREBASE (LIGAÇÃO À BASE DE DADOS E AÇÕES DE GRAVAÇÃO/ELIMINAÇÃO) -->
+    <!-- SCRIPT DO FIREBASE ATRIBUÍDO DIRETAMENTE AO OBJETO WINDOW -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";

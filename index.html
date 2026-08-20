@@ -249,7 +249,7 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-bold font-serif">Painel de Controlo - Alê Nail Designer</h2>
-                        <p class="text-xs text-rose-200">Gestão de Serviços e Galeria</p>
+                        <p class="text-xs text-rose-200">Gestão de Serviços e Galeria (Sincronizado na Nuvem)</p>
                     </div>
                 </div>
                 <button onclick="closeAdminDashboard()" class="bg-rose-800 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition">
@@ -286,7 +286,7 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-4">
                     <div>
                         <h3 class="text-lg font-bold font-serif text-slate-900">Gerir Serviços</h3>
-                        <p class="text-xs text-slate-500">Adicione, edite ou remova serviços do catálogo.</p>
+                        <p class="text-xs text-slate-500">Adicione, edite ou remova serviços do catálogo em tempo real.</p>
                     </div>
                     <button onclick="openServiceModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition">
                         <i class="fa-solid fa-plus mr-1"></i> Novo Serviço
@@ -357,7 +357,7 @@
                         Cancelar
                     </button>
                     <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
-                        Guardar Serviço
+                        Guardar na Nuvem
                     </button>
                 </div>
             </form>
@@ -380,7 +380,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Escolher Foto da Galeria do Celular / Computador</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Escolher Foto do Celular / Computador</label>
                     <input type="file" id="galleryFileInput" accept="image/*" onchange="previewFileImage(event)"
                            class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100">
                 </div>
@@ -398,39 +398,55 @@
                         Cancelar
                     </button>
                     <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
-                        Adicionar Foto
+                        Adicionar na Nuvem
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- SCRIPTS E LÓGICA DE FUNCIONAMENTO -->
-    <script>
-        let services = [
+    <!-- SCRIPTS DE INTEGRAÇÃO COM FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuração segura do Firebase fornecida pelo ambiente
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let services = [];
+        let gallery = [];
+        let currentUser = null;
+        let uploadedFileBase64 = '';
+
+        const defaultServices = [
             {
-                id: 1,
+                id: "serv_1",
                 name: "Alongamento em Fibra de Vidro",
                 description: "Técnica duradoura, natural e super resistente para unhas longas perfeitas.",
                 price: "R$ 150,00",
                 image: "https://images.unsplash.com/photo-1607779097040-26e8097ee4c5?auto=format&fit=crop&q=80&w=600"
             },
             {
-                id: 2,
+                id: "serv_2",
                 name: "Esmaltação em Gel",
                 description: "Brilho intenso e durabilidade de até 20 dias sem descascar.",
                 price: "R$ 90,00",
                 image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=600"
             },
             {
-                id: 3,
+                id: "serv_3",
                 name: "Blindagem de Unhas",
                 description: "Proteção extra para unhas naturais quebradiças, promovendo crescimento saudável.",
                 price: "R$ 80,00",
                 image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600"
             },
             {
-                id: 4,
+                id: "serv_4",
                 name: "Nail Art Personalizada",
                 description: "Decorações artísticas feitas à mão, francesinhas modernas e pedrarias.",
                 price: "A partir de R$ 30",
@@ -438,54 +454,88 @@
             }
         ];
 
-        let gallery = [
-            { id: 1, title: "Esmaltação em Gel", url: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=600" },
-            { id: 2, title: "Nail Art Minimalista", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
-            { id: 3, title: "Alongamento Fibra", url: "https://images.unsplash.com/photo-1607779097040-26e8097ee4c5?auto=format&fit=crop&q=80&w=600" },
-            { id: 4, title: "Manicure Clássica", url: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=600" }
+        const defaultGallery = [
+            { id: "gal_1", title: "Esmaltação em Gel", url: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=600" },
+            { id: "gal_2", title: "Nail Art Minimalista", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+            { id: "gal_3", title: "Alongamento Fibra", url: "https://images.unsplash.com/photo-1607779097040-26e8097ee4c5?auto=format&fit=crop&q=80&w=600" },
+            { id: "gal_4", title: "Manicure Clássica", url: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=600" }
         ];
 
-        let faqs = [
+        const faqs = [
             { question: "Como faço para agendar um horário?", answer: "Basta clicar em qualquer botão 'Agendar Unhas' para ser redirecionado ao nosso WhatsApp (+55 31 99221-2015)." },
             { question: "Quanto tempo dura o alongamento?", answer: "Dura por tempo indeterminado com manutenções a cada 20 a 25 dias." },
             { question: "Os materiais são esterilizados?", answer: "Sim, utilizamos autoclave e materiais descartáveis ou esterilizados individualmente." }
         ];
 
-        let uploadedFileBase64 = '';
-
-        function showCustomConfirm(title, message, onConfirm) {
-            document.getElementById('customModalTitle').innerText = title;
-            document.getElementById('customModalText').innerText = message;
-            const confirmBtn = document.getElementById('customModalConfirm');
-            
-            const newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-            
-            newConfirmBtn.onclick = function() {
-                closeCustomModal();
-                onConfirm();
-            };
-
-            document.getElementById('customModal').classList.remove('hidden');
-        }
-
-        function closeCustomModal() {
-            document.getElementById('customModal').classList.add('hidden');
-        }
-
-        function previewFileImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedFileBase64 = e.target.result;
-                    document.getElementById('newGalleryUrl').value = '';
-                };
-                reader.readAsDataURL(file);
+        // Autenticação Obrigatória no Firebase
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Erro na autenticação:", err);
             }
         }
 
-        function renderServices() {
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                setupFirestoreListeners();
+            }
+        });
+
+        // Ouvintes em tempo real para sincronizar com a Base de Dados
+        function setupFirestoreListeners() {
+            if (!currentUser) return;
+
+            // Caminhos públicos seguros para partilhar dados entre clientes
+            const servicesCol = collection(db, 'artifacts', appId, 'public', 'data', 'services_db');
+            onSnapshot(servicesCol, (snapshot) => {
+                services = [];
+                snapshot.forEach(docSnap => {
+                    services.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Se a base de dados estiver vazia inicialmente, preenche com os padrões
+                if (services.length === 0) {
+                    defaultServices.forEach(serv => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serv.id), serv);
+                    });
+                } else {
+                    renderServices();
+                    updateAdminDashboard();
+                }
+            }, (error) => {
+                console.error("Erro ao carregar serviços:", error);
+            });
+
+            const galleryCol = collection(db, 'artifacts', appId, 'public', 'data', 'gallery_db');
+            onSnapshot(galleryCol, (snapshot) => {
+                gallery = [];
+                snapshot.forEach(docSnap => {
+                    gallery.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                if (gallery.length === 0) {
+                    defaultGallery.forEach(item => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', item.id), item);
+                    });
+                } else {
+                    renderGallery();
+                    updateAdminDashboard();
+                }
+            }, (error) => {
+                console.error("Erro ao carregar galeria:", error);
+            });
+        }
+
+        // Funções Globais de Renderização
+        window.renderServices = function() {
             const container = document.getElementById('servicesContainer');
             if (!container) return;
             container.innerHTML = '';
@@ -518,7 +568,7 @@
             });
         }
 
-        function renderGallery() {
+        window.renderGallery = function() {
             const container = document.getElementById('galleryContainer');
             if (!container) return;
             container.innerHTML = '';
@@ -553,24 +603,25 @@
             });
         }
 
-        function toggleFaq(index) {
+        window.toggleFaq = function(index) {
             const ans = document.getElementById(`faqAns-${index}`);
             const icon = document.getElementById(`faqIcon-${index}`);
             ans.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         }
 
-        function toggleMobileMenu() {
+        window.toggleMobileMenu = function() {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         }
 
-        // Sistema Admin
-        function openAdminModal() { document.getElementById('adminModal').classList.remove('hidden'); }
-        function closeAdminModal() { 
+        // Sistema Admin e Modais
+        window.openAdminModal = function() { document.getElementById('adminModal').classList.remove('hidden'); }
+        window.closeAdminModal = function() { 
             document.getElementById('adminModal').classList.add('hidden'); 
             document.getElementById('adminPasswordInput').value = ''; 
         }
-        function handleAdminLogin(e) {
+
+        window.handleAdminLogin = function(e) {
             e.preventDefault();
             const pass = document.getElementById('adminPasswordInput').value;
             if (pass === 'ale_naildesigner') {
@@ -580,13 +631,14 @@
                 showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
             }
         }
-        function openAdminDashboard() {
+
+        window.openAdminDashboard = function() {
             document.getElementById('adminDashboard').classList.remove('hidden');
             updateAdminDashboard();
         }
-        function closeAdminDashboard() { document.getElementById('adminDashboard').classList.add('hidden'); }
+        window.closeAdminDashboard = function() { document.getElementById('adminDashboard').classList.add('hidden'); }
 
-        function updateAdminDashboard() {
+        window.updateAdminDashboard = function() {
             document.getElementById('statServicesCount').innerText = services.length;
             document.getElementById('statGalleryCount').innerText = gallery.length;
 
@@ -602,10 +654,10 @@
                         <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
                         <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
                         <td class="py-3 px-4 text-right space-x-2">
-                            <button type="button" onclick="editService(${serv.id})" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Editar">
+                            <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Editar">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button type="button" onclick="deleteService(${serv.id})" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Excluir">
+                            <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Excluir">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </td>
@@ -621,7 +673,7 @@
                         <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
                             <span class="text-white text-xs font-semibold truncate">${item.title}</span>
-                            <button type="button" onclick="deleteGalleryItem(${item.id})" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs" title="Remover Foto">
+                            <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs" title="Remover Foto">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -630,8 +682,8 @@
             });
         }
 
-        // Gestão de Serviços
-        function openServiceModal(isEdit = false, id = null) {
+        // Operações de Serviços na Base de Dados
+        window.openServiceModal = function(isEdit = false, id = null) {
             document.getElementById('serviceModal').classList.remove('hidden');
             if (isEdit && id) {
                 document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
@@ -650,80 +702,117 @@
                 document.getElementById('newServiceImg').value = '';
             }
         }
-        function closeServiceModal() { document.getElementById('serviceModal').classList.add('hidden'); }
+        window.closeServiceModal = function() { document.getElementById('serviceModal').classList.add('hidden'); }
 
-        function handleSaveService(e) {
+        window.handleSaveService = async function(e) {
             e.preventDefault();
+            if (!currentUser) return;
             const editId = document.getElementById('serviceEditId').value;
             const name = document.getElementById('newServiceName').value;
             const desc = document.getElementById('newServiceDesc').value;
             const price = document.getElementById('newServicePrice').value;
             const image = document.getElementById('newServiceImg').value;
 
-            if (editId !== '') {
-                const idNum = Number(editId);
-                services = services.map(s => s.id === idNum ? { id: idNum, name, description: desc, price, image } : s);
-            } else {
-                const newServ = { id: Date.now(), name, description: desc, price, image };
-                services.push(newServ);
-            }
+            const serviceId = editId !== '' ? editId : 'serv_' + Date.now();
+            const serviceData = { name, description: desc, price, image };
 
-            renderServices();
-            updateAdminDashboard();
-            closeServiceModal();
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serviceId), serviceData);
+                closeServiceModal();
+            } catch (err) {
+                console.error("Erro ao guardar serviço:", err);
+            }
         }
 
-        function editService(id) { openServiceModal(true, id); }
-        function deleteService(id) {
-            showCustomConfirm("Excluir Serviço", "Tem a certeza que deseja excluir este serviço?", () => {
-                services = services.filter(s => s.id !== id);
-                renderServices();
-                updateAdminDashboard();
+        window.editService = function(id) { openServiceModal(true, id); }
+        window.deleteService = function(id) {
+            showCustomConfirm("Excluir Serviço", "Tem a certeza que deseja excluir este serviço da nuvem?", async () => {
+                if (!currentUser) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', id));
+                } catch (err) {
+                    console.error("Erro ao excluir serviço:", err);
+                }
             });
         }
 
-        // Gestão de Galeria
-        function openGalleryModal() { 
+        // Operações de Galeria na Base de Dados
+        window.openGalleryModal = function() { 
             document.getElementById('galleryModal').classList.remove('hidden'); 
             document.getElementById('newGalleryTitle').value = '';
             document.getElementById('newGalleryUrl').value = '';
             document.getElementById('galleryFileInput').value = '';
             uploadedFileBase64 = '';
         }
-        
-        function closeGalleryModal() { document.getElementById('galleryModal').classList.add('hidden'); }
+        window.closeGalleryModal = function() { document.getElementById('galleryModal').classList.add('hidden'); }
 
-        function handleSaveGallery(e) {
+        window.previewFileImage = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedFileBase64 = e.target.result;
+                    document.getElementById('newGalleryUrl').value = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        window.handleSaveGallery = async function(e) {
             e.preventDefault();
+            if (!currentUser) return;
             const titleVal = document.getElementById('newGalleryTitle').value;
             const urlInput = document.getElementById('newGalleryUrl').value;
-            
             const finalImageUrl = uploadedFileBase64 || urlInput;
 
             if (!finalImageUrl) {
-                showCustomConfirm("Aviso", "Por favor, selecione uma foto da galeria do seu dispositivo ou insira uma URL.", () => {});
+                showCustomConfirm("Aviso", "Por favor, selecione uma foto do dispositivo ou insira uma URL válida.", () => {});
                 return;
             }
 
-            gallery.push({ id: Date.now(), title: titleVal, url: finalImageUrl });
-            renderGallery();
-            updateAdminDashboard();
-            closeGalleryModal();
-            e.target.reset();
-            uploadedFileBase64 = '';
+            const galleryId = 'gal_' + Date.now();
+            const galleryData = { title: titleVal, url: finalImageUrl };
+
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', galleryId), galleryData);
+                closeGalleryModal();
+                e.target.reset();
+                uploadedFileBase64 = '';
+            } catch (err) {
+                console.error("Erro ao guardar foto:", err);
+            }
         }
 
-        function deleteGalleryItem(id) {
-            showCustomConfirm("Remover Foto", "Deseja remover esta foto da galeria?", () => {
-                gallery = gallery.filter(item => item.id !== id);
-                renderGallery();
-                updateAdminDashboard();
+        window.deleteGalleryItem = function(id) {
+            showCustomConfirm("Remover Foto", "Deseja remover esta foto da galeria na nuvem?", async () => {
+                if (!currentUser) return;
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', id));
+                } catch (err) {
+                    console.error("Erro ao remover foto:", err);
+                }
             });
         }
 
+        function showCustomConfirm(title, message, onConfirm) {
+            document.getElementById('customModalTitle').innerText = title;
+            document.getElementById('customModalText').innerText = message;
+            const confirmBtn = document.getElementById('customModalConfirm');
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.onclick = function() {
+                closeCustomModal();
+                onConfirm();
+            };
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        window.closeCustomModal = function() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
         window.onload = function() {
-            renderServices();
-            renderGallery();
             renderFaq();
         };
     </script>

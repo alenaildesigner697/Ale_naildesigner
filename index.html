@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -136,7 +136,9 @@
                 <p class="text-slate-600 mt-2">Escolha o tratamento ideal para deixar as suas unhas impecáveis, fortes e cheias de estilo.</p>
             </div>
 
-            <div id="servicesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            <div id="servicesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Conteúdo carregado dinamicamente -->
+            </div>
         </div>
     </section>
 
@@ -149,7 +151,9 @@
                 <p class="text-slate-600 mt-2">Um pouco do amor e dedicação em cada detalhe entregue às minhas clientes.</p>
             </div>
 
-            <div id="galleryContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            <div id="galleryContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Conteúdo carregado dinamicamente -->
+            </div>
         </div>
     </section>
 
@@ -411,7 +415,6 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Configuração segura do Firebase fornecida pelo ambiente
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -467,7 +470,6 @@
             { question: "Os materiais são esterilizados?", answer: "Sim, utilizamos autoclave e materiais descartáveis ou esterilizados individualmente." }
         ];
 
-        // Autenticação Obrigatória no Firebase
         async function initAuth() {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -489,11 +491,9 @@
             }
         });
 
-        // Ouvintes em tempo real para sincronizar com a Base de Dados
         function setupFirestoreListeners() {
             if (!currentUser) return;
 
-            // Caminhos públicos seguros para partilhar dados entre clientes
             const servicesCol = collection(db, 'artifacts', appId, 'public', 'data', 'services_db');
             onSnapshot(servicesCol, (snapshot) => {
                 services = [];
@@ -501,7 +501,6 @@
                     services.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                // Se a base de dados estiver vazia inicialmente, preenche com os padrões
                 if (services.length === 0) {
                     defaultServices.forEach(serv => {
                         setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serv.id), serv);
@@ -534,7 +533,6 @@
             });
         }
 
-        // Funções Globais de Renderização
         window.renderServices = function() {
             const container = document.getElementById('servicesContainer');
             if (!container) return;
@@ -614,7 +612,6 @@
             document.getElementById('mobileMenu').classList.toggle('hidden');
         }
 
-        // Sistema Admin e Modais
         window.openAdminModal = function() { document.getElementById('adminModal').classList.remove('hidden'); }
         window.closeAdminModal = function() { 
             document.getElementById('adminModal').classList.add('hidden'); 
@@ -682,7 +679,6 @@
             });
         }
 
-        // Operações de Serviços na Base de Dados
         window.openServiceModal = function(isEdit = false, id = null) {
             document.getElementById('serviceModal').classList.remove('hidden');
             if (isEdit && id) {
@@ -736,7 +732,6 @@
             });
         }
 
-        // Operações de Galeria na Base de Dados
         window.openGalleryModal = function() { 
             document.getElementById('galleryModal').classList.remove('hidden'); 
             document.getElementById('newGalleryTitle').value = '';

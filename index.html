@@ -405,22 +405,10 @@
         </div>
     </div>
 
-    <!-- SCRIPTS DE INTEGRAÇÃO COM FIREBASE -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Configuração segura do Firebase fornecida pelo ambiente
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
+    <!-- SCRIPT GLOBAL PARA INTERAÇÕES E MODAIS -->
+    <script>
         let services = [];
         let gallery = [];
-        let currentUser = null;
         let uploadedFileBase64 = '';
 
         const defaultServices = [
@@ -467,7 +455,253 @@
             { question: "Os materiais são esterilizados?", answer: "Sim, utilizamos autoclave e materiais descartáveis ou esterilizados individualmente." }
         ];
 
-        // Autenticação Obrigatória no Firebase
+        function renderServices() {
+            const container = document.getElementById('servicesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const listToRender = services.length > 0 ? services : defaultServices;
+            listToRender.forEach(service => {
+                container.innerHTML += `
+                    <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-rose-100">
+                        <div>
+                            <div class="h-48 overflow-hidden relative bg-rose-100">
+                                <img src="${service.image}" alt="${service.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-rose-700 font-bold text-xs px-3 py-1 rounded-full shadow">
+                                    ${service.price}
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold font-serif text-rose-950 mb-2">${service.name}</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">${service.description}</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20o%20serviço:%20${encodeURIComponent(service.name)}" 
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="w-full bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white text-sm font-semibold py-2.5 rounded-xl border border-rose-200 transition text-center flex items-center justify-center space-x-2">
+                                <i class="fa-brands fa-whatsapp text-base"></i>
+                                <span>Agendar este serviço</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const listToRender = gallery.length > 0 ? gallery : defaultGallery;
+            listToRender.forEach(item => {
+                container.innerHTML += `
+                    <div class="rounded-2xl overflow-hidden shadow-md group relative h-64 bg-rose-100">
+                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-rose-950/70 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                            <span class="text-white text-sm font-medium">${item.title}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFaq() {
+            const container = document.getElementById('faqContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            faqs.forEach((faq, index) => {
+                container.innerHTML += `
+                    <div class="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+                        <button onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none">
+                            <span>${faq.question}</span>
+                            <i id="faqIcon-${index}" class="fa-solid fa-chevron-down text-rose-500 transition transform"></i>
+                        </button>
+                        <div id="faqAns-${index}" class="hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3">
+                            ${faq.answer}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleFaq(index) {
+            const ans = document.getElementById(`faqAns-${index}`);
+            const icon = document.getElementById(`faqIcon-${index}`);
+            ans.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function openAdminModal() { 
+            document.getElementById('adminModal').classList.remove('hidden'); 
+        }
+        
+        function closeAdminModal() { 
+            document.getElementById('adminModal').classList.add('hidden'); 
+            document.getElementById('adminPasswordInput').value = ''; 
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === 'ale_naildesigner') {
+                closeAdminModal();
+                openAdminDashboard();
+            } else {
+                showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
+            }
+        }
+
+        function openAdminDashboard() {
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            updateAdminDashboard();
+        }
+
+        function closeAdminDashboard() { 
+            document.getElementById('adminDashboard').classList.add('hidden'); 
+        }
+
+        function updateAdminDashboard() {
+            const servList = services.length > 0 ? services : defaultServices;
+            const galList = gallery.length > 0 ? gallery : defaultGallery;
+
+            document.getElementById('statServicesCount').innerText = servList.length;
+            document.getElementById('statGalleryCount').innerText = galList.length;
+
+            const tbody = document.getElementById('adminServicesTableBody');
+            tbody.innerHTML = '';
+            servList.forEach(serv => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
+                            <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
+                            <span>${serv.name}</span>
+                        </td>
+                        <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
+                        <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
+                        <td class="py-3 px-4 text-right space-x-2">
+                            <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Excluir">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const grid = document.getElementById('adminGalleryGrid');
+            grid.innerHTML = '';
+            galList.forEach(item => {
+                grid.innerHTML += `
+                    <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
+                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
+                            <span class="text-white text-xs font-semibold truncate">${item.title}</span>
+                            <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs" title="Remover Foto">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openServiceModal(isEdit = false, id = null) {
+            document.getElementById('serviceModal').classList.remove('hidden');
+            const servList = services.length > 0 ? services : defaultServices;
+            if (isEdit && id) {
+                document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
+                const serv = servList.find(s => s.id === id);
+                if (serv) {
+                    document.getElementById('serviceEditId').value = serv.id;
+                    document.getElementById('newServiceName').value = serv.name;
+                    document.getElementById('newServiceDesc').value = serv.description;
+                    document.getElementById('newServicePrice').value = serv.price;
+                    document.getElementById('newServiceImg').value = serv.image;
+                }
+            } else {
+                document.getElementById('serviceModalTitle').innerText = "Adicionar Novo Serviço";
+                document.getElementById('serviceEditId').value = '';
+                document.getElementById('newServiceName').value = '';
+                document.getElementById('newServiceDesc').value = '';
+                document.getElementById('newServicePrice').value = '';
+                document.getElementById('newServiceImg').value = '';
+            }
+        }
+
+        function closeServiceModal() { 
+            document.getElementById('serviceModal').classList.add('hidden'); 
+        }
+
+        function openGalleryModal() { 
+            document.getElementById('galleryModal').classList.remove('hidden'); 
+            document.getElementById('newGalleryTitle').value = '';
+            document.getElementById('newGalleryUrl').value = '';
+            document.getElementById('galleryFileInput').value = '';
+            uploadedFileBase64 = '';
+        }
+
+        function closeGalleryModal() { 
+            document.getElementById('galleryModal').classList.add('hidden'); 
+        }
+
+        function previewFileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedFileBase64 = e.target.result;
+                    document.getElementById('newGalleryUrl').value = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showCustomConfirm(title, message, onConfirm) {
+            document.getElementById('customModalTitle').innerText = title;
+            document.getElementById('customModalText').innerText = message;
+            const confirmBtn = document.getElementById('customModalConfirm');
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.onclick = function() {
+                closeCustomModal();
+                onConfirm();
+            };
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            renderServices();
+            renderGallery();
+            renderFaq();
+        };
+    </script>
+
+    <!-- SCRIPT DO FIREBASE PARA SINCRONIZAÇÃO EM TEMPO REAL -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let currentUser = null;
+
         async function initAuth() {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -489,11 +723,9 @@
             }
         });
 
-        // Ouvintes em tempo real para sincronizar com a Base de Dados
         function setupFirestoreListeners() {
             if (!currentUser) return;
 
-            // Caminhos públicos seguros para partilhar dados entre clientes
             const servicesCol = collection(db, 'artifacts', appId, 'public', 'data', 'services_db');
             onSnapshot(servicesCol, (snapshot) => {
                 services = [];
@@ -501,7 +733,6 @@
                     services.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                // Se a base de dados estiver vazia inicialmente, preenche com os padrões
                 if (services.length === 0) {
                     defaultServices.forEach(serv => {
                         setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serv.id), serv);
@@ -534,176 +765,6 @@
             });
         }
 
-        // Funções Globais de Renderização
-        window.renderServices = function() {
-            const container = document.getElementById('servicesContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            services.forEach(service => {
-                container.innerHTML += `
-                    <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-rose-100">
-                        <div>
-                            <div class="h-48 overflow-hidden relative bg-rose-100">
-                                <img src="${service.image}" alt="${service.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-rose-700 font-bold text-xs px-3 py-1 rounded-full shadow">
-                                    ${service.price}
-                                </span>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold font-serif text-rose-950 mb-2">${service.name}</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed">${service.description}</p>
-                            </div>
-                        </div>
-                        <div class="px-6 pb-6 pt-0">
-                            <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20o%20serviço:%20${encodeURIComponent(service.name)}" 
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="w-full bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white text-sm font-semibold py-2.5 rounded-xl border border-rose-200 transition text-center flex items-center justify-center space-x-2">
-                                <i class="fa-brands fa-whatsapp text-base"></i>
-                                <span>Agendar este serviço</span>
-                            </a>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.renderGallery = function() {
-            const container = document.getElementById('galleryContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            gallery.forEach(item => {
-                container.innerHTML += `
-                    <div class="rounded-2xl overflow-hidden shadow-md group relative h-64 bg-rose-100">
-                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-rose-950/70 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
-                            <span class="text-white text-sm font-medium">${item.title}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderFaq() {
-            const container = document.getElementById('faqContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            faqs.forEach((faq, index) => {
-                container.innerHTML += `
-                    <div class="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
-                        <button onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none">
-                            <span>${faq.question}</span>
-                            <i id="faqIcon-${index}" class="fa-solid fa-chevron-down text-rose-500 transition transform"></i>
-                        </button>
-                        <div id="faqAns-${index}" class="hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3">
-                            ${faq.answer}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.toggleFaq = function(index) {
-            const ans = document.getElementById(`faqAns-${index}`);
-            const icon = document.getElementById(`faqIcon-${index}`);
-            ans.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-        }
-
-        window.toggleMobileMenu = function() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
-        // Sistema Admin e Modais
-        window.openAdminModal = function() { document.getElementById('adminModal').classList.remove('hidden'); }
-        window.closeAdminModal = function() { 
-            document.getElementById('adminModal').classList.add('hidden'); 
-            document.getElementById('adminPasswordInput').value = ''; 
-        }
-
-        window.handleAdminLogin = function(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPasswordInput').value;
-            if (pass === 'ale_naildesigner') {
-                closeAdminModal();
-                openAdminDashboard();
-            } else {
-                showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
-            }
-        }
-
-        window.openAdminDashboard = function() {
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            updateAdminDashboard();
-        }
-        window.closeAdminDashboard = function() { document.getElementById('adminDashboard').classList.add('hidden'); }
-
-        window.updateAdminDashboard = function() {
-            document.getElementById('statServicesCount').innerText = services.length;
-            document.getElementById('statGalleryCount').innerText = gallery.length;
-
-            const tbody = document.getElementById('adminServicesTableBody');
-            tbody.innerHTML = '';
-            services.forEach(serv => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
-                            <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
-                            <span>${serv.name}</span>
-                        </td>
-                        <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
-                        <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
-                        <td class="py-3 px-4 text-right space-x-2">
-                            <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Editar">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Excluir">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            const grid = document.getElementById('adminGalleryGrid');
-            grid.innerHTML = '';
-            gallery.forEach(item => {
-                grid.innerHTML += `
-                    <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
-                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
-                            <span class="text-white text-xs font-semibold truncate">${item.title}</span>
-                            <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs" title="Remover Foto">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // Operações de Serviços na Base de Dados
-        window.openServiceModal = function(isEdit = false, id = null) {
-            document.getElementById('serviceModal').classList.remove('hidden');
-            if (isEdit && id) {
-                document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
-                const serv = services.find(s => s.id === id);
-                document.getElementById('serviceEditId').value = serv.id;
-                document.getElementById('newServiceName').value = serv.name;
-                document.getElementById('newServiceDesc').value = serv.description;
-                document.getElementById('newServicePrice').value = serv.price;
-                document.getElementById('newServiceImg').value = serv.image;
-            } else {
-                document.getElementById('serviceModalTitle').innerText = "Adicionar Novo Serviço";
-                document.getElementById('serviceEditId').value = '';
-                document.getElementById('newServiceName').value = '';
-                document.getElementById('newServiceDesc').value = '';
-                document.getElementById('newServicePrice').value = '';
-                document.getElementById('newServiceImg').value = '';
-            }
-        }
-        window.closeServiceModal = function() { document.getElementById('serviceModal').classList.add('hidden'); }
-
         window.handleSaveService = async function(e) {
             e.preventDefault();
             if (!currentUser) return;
@@ -724,7 +785,10 @@
             }
         }
 
-        window.editService = function(id) { openServiceModal(true, id); }
+        window.editService = function(id) { 
+            openServiceModal(true, id); 
+        }
+
         window.deleteService = function(id) {
             showCustomConfirm("Excluir Serviço", "Tem a certeza que deseja excluir este serviço da nuvem?", async () => {
                 if (!currentUser) return;
@@ -734,28 +798,6 @@
                     console.error("Erro ao excluir serviço:", err);
                 }
             });
-        }
-
-        // Operações de Galeria na Base de Dados
-        window.openGalleryModal = function() { 
-            document.getElementById('galleryModal').classList.remove('hidden'); 
-            document.getElementById('newGalleryTitle').value = '';
-            document.getElementById('newGalleryUrl').value = '';
-            document.getElementById('galleryFileInput').value = '';
-            uploadedFileBase64 = '';
-        }
-        window.closeGalleryModal = function() { document.getElementById('galleryModal').classList.add('hidden'); }
-
-        window.previewFileImage = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedFileBase64 = e.target.result;
-                    document.getElementById('newGalleryUrl').value = '';
-                };
-                reader.readAsDataURL(file);
-            }
         }
 
         window.handleSaveGallery = async function(e) {
@@ -793,28 +835,6 @@
                 }
             });
         }
-
-        function showCustomConfirm(title, message, onConfirm) {
-            document.getElementById('customModalTitle').innerText = title;
-            document.getElementById('customModalText').innerText = message;
-            const confirmBtn = document.getElementById('customModalConfirm');
-            const newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-            
-            newConfirmBtn.onclick = function() {
-                closeCustomModal();
-                onConfirm();
-            };
-            document.getElementById('customModal').classList.remove('hidden');
-        }
-
-        window.closeCustomModal = function() {
-            document.getElementById('customModal').classList.add('hidden');
-        }
-
-        window.onload = function() {
-            renderFaq();
-        };
     </script>
 </body>
 </html>

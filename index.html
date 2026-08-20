@@ -59,7 +59,7 @@
                 <a href="#servicos" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">Serviços</a>
                 <a href="#galeria" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">Galeria</a>
                 <a href="#faq" class="text-sm font-medium text-slate-600 hover:text-rose-600 transition">FAQ & Dúvidas</a>
-                <button onclick="openAdminModal()" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 transition">
+                <button type="button" onclick="openAdminModal()" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 transition cursor-pointer">
                     <i class="fa-solid fa-lock mr-1"></i> Admin
                 </button>
             </nav>
@@ -72,7 +72,7 @@
                     <i class="fa-brands fa-whatsapp text-lg"></i>
                     <span>Agendar Unhas</span>
                 </a>
-                <button onclick="toggleMobileMenu()" class="md:hidden text-slate-600 hover:text-rose-600 focus:outline-none">
+                <button type="button" onclick="toggleMobileMenu()" class="md:hidden text-slate-600 hover:text-rose-600 focus:outline-none cursor-pointer p-2">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
@@ -80,11 +80,11 @@
 
         <!-- Menu Telemóvel -->
         <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-rose-100 px-4 pt-2 pb-4 space-y-2">
-            <a href="#inicio" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Início</a>
-            <a href="#servicos" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Serviços</a>
-            <a href="#galeria" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Galeria</a>
-            <a href="#faq" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">FAQ & Dúvidas</a>
-            <button onclick="openAdminModal()" class="w-full text-left py-2 text-rose-600 font-medium">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Início</a>
+            <a href="#servicos" onclick="toggleMobileMenu()" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Serviços</a>
+            <a href="#galeria" onclick="toggleMobileMenu()" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">Galeria</a>
+            <a href="#faq" onclick="toggleMobileMenu()" class="block py-2 text-slate-600 hover:text-rose-600 font-medium">FAQ & Dúvidas</a>
+            <button type="button" onclick="toggleMobileMenu(); openAdminModal();" class="w-full text-left py-2 text-rose-600 font-medium cursor-pointer">
                 <i class="fa-solid fa-lock mr-1"></i> Painel Administrativo
             </button>
         </div>
@@ -189,7 +189,7 @@
             </div>
             <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-rose-400">
                 <p>&copy; 2026 Alê Nail Designer. Todos os direitos reservados.</p>
-                <button onclick="openAdminModal()" class="mt-4 sm:mt-0 hover:text-white underline">Painel Administrativo</button>
+                <button type="button" onclick="openAdminModal()" class="mt-4 sm:mt-0 hover:text-white underline cursor-pointer">Painel Administrativo</button>
             </div>
         </div>
     </footer>
@@ -203,10 +203,10 @@
             <h3 id="customModalTitle" class="text-lg font-bold font-serif text-slate-900 mb-2">Confirmação</h3>
             <p id="customModalText" class="text-xs text-slate-600 mb-6">Tem a certeza que deseja realizar esta ação?</p>
             <div id="customModalActions" class="flex space-x-3">
-                <button id="customModalCancel" onclick="closeCustomModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition">
+                <button type="button" id="customModalCancel" onclick="closeCustomModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer">
                     Cancelar
                 </button>
-                <button id="customModalConfirm" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                <button type="button" id="customModalConfirm" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition cursor-pointer">
                     Confirmar
                 </button>
             </div>
@@ -216,7 +216,7 @@
     <!-- MODAL DE LOGIN ADMIN -->
     <div id="adminModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-rose-100">
-            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+            <button type="button" onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer p-2">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             <div class="text-center mb-6">
@@ -232,7 +232,7 @@
                     <input type="password" id="adminPasswordInput" placeholder="••••••••••••••" required autocomplete="current-password"
                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
                 </div>
-                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm">
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-3 rounded-xl shadow-md transition text-sm cursor-pointer">
                     Entrar no Painel
                 </button>
             </form>
@@ -252,7 +252,7 @@
                         <p class="text-xs text-rose-200">Gestão de Serviços e Galeria (Sincronizado na Nuvem)</p>
                     </div>
                 </div>
-                <button onclick="closeAdminDashboard()" class="bg-rose-800 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition">
+                <button type="button" onclick="closeAdminDashboard()" class="bg-rose-800 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer">
                     <i class="fa-solid fa-arrow-left mr-1"></i> Sair do Painel
                 </button>
             </div>
@@ -288,7 +288,7 @@
                         <h3 class="text-lg font-bold font-serif text-slate-900">Gerir Serviços</h3>
                         <p class="text-xs text-slate-500">Adicione, edite ou remova serviços do catálogo em tempo real.</p>
                     </div>
-                    <button onclick="openServiceModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                    <button type="button" onclick="openServiceModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition cursor-pointer">
                         <i class="fa-solid fa-plus mr-1"></i> Novo Serviço
                     </button>
                 </div>
@@ -314,7 +314,7 @@
                         <h3 class="text-lg font-bold font-serif text-slate-900">Gerir Galeria de Inspirações</h3>
                         <p class="text-xs text-slate-500">Envie fotos diretamente do seu dispositivo ou adicione por link.</p>
                     </div>
-                    <button onclick="openGalleryModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                    <button type="button" onclick="openGalleryModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-xl text-xs font-semibold shadow transition cursor-pointer">
                         <i class="fa-solid fa-plus mr-1"></i> Adicionar Foto
                     </button>
                 </div>
@@ -326,7 +326,7 @@
     <!-- MODAL DE SERVIÇO -->
     <div id="serviceModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-rose-100">
-            <button onclick="closeServiceModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+            <button type="button" onclick="closeServiceModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer p-2">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             <h3 id="serviceModalTitle" class="text-xl font-bold font-serif text-slate-900 mb-4">Adicionar Novo Serviço</h3>
@@ -353,10 +353,10 @@
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm">
                 </div>
                 <div class="pt-2 flex space-x-3">
-                    <button type="button" onclick="closeServiceModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition">
+                    <button type="button" onclick="closeServiceModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer">
                         Cancelar
                     </button>
-                    <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                    <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition cursor-pointer">
                         Guardar na Nuvem
                     </button>
                 </div>
@@ -367,7 +367,7 @@
     <!-- MODAL DE GALERIA COM UPLOAD DO DISPOSITIVO -->
     <div id="galleryModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-rose-100">
-            <button onclick="closeGalleryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+            <button type="button" onclick="closeGalleryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer p-2">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             <h3 class="text-xl font-bold font-serif text-slate-900 mb-4">Adicionar Foto à Galeria</h3>
@@ -394,10 +394,10 @@
                 </div>
 
                 <div class="pt-2 flex space-x-3">
-                    <button type="button" onclick="closeGalleryModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition">
+                    <button type="button" onclick="closeGalleryModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-semibold transition cursor-pointer">
                         Cancelar
                     </button>
-                    <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">
+                    <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition cursor-pointer">
                         Adicionar na Nuvem
                     </button>
                 </div>
@@ -405,17 +405,11 @@
         </div>
     </div>
 
-    <!-- SCRIPT UNIFICADO: INTERAÇÕES, MODAIS E BASE DE DADOS -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Variáveis globais acessíveis a toda a página
+    <!-- SCRIPT GLOBAL DE INTERFACE (GARANTE QUE OS BOTÕES E O MENU FUNCIONAM SEMPRE) -->
+    <script>
         window.services = [];
         window.gallery = [];
         window.uploadedFileBase64 = '';
-        let currentUser = null;
 
         const defaultServices = [
             {
@@ -461,7 +455,247 @@
             { question: "Os materiais são esterilizados?", answer: "Sim, utilizamos autoclave e materiais descartáveis ou esterilizados individualmente." }
         ];
 
-        // Inicialização do Firebase
+        function renderServices() {
+            const container = document.getElementById('servicesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const listToRender = window.services.length > 0 ? window.services : defaultServices;
+            listToRender.forEach(service => {
+                container.innerHTML += `
+                    <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-rose-100">
+                        <div>
+                            <div class="h-48 overflow-hidden relative bg-rose-100">
+                                <img src="${service.image}" alt="${service.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-rose-700 font-bold text-xs px-3 py-1 rounded-full shadow">
+                                    ${service.price}
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold font-serif text-rose-950 mb-2">${service.name}</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">${service.description}</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20o%20serviço:%20${encodeURIComponent(service.name)}" 
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="w-full bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white text-sm font-semibold py-2.5 rounded-xl border border-rose-200 transition text-center flex items-center justify-center space-x-2">
+                                <i class="fa-brands fa-whatsapp text-base"></i>
+                                <span>Agendar este serviço</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const listToRender = window.gallery.length > 0 ? window.gallery : defaultGallery;
+            listToRender.forEach(item => {
+                container.innerHTML += `
+                    <div class="rounded-2xl overflow-hidden shadow-md group relative h-64 bg-rose-100">
+                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-rose-950/70 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                            <span class="text-white text-sm font-medium">${item.title}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFaq() {
+            const container = document.getElementById('faqContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            faqs.forEach((faq, index) => {
+                container.innerHTML += `
+                    <div class="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+                        <button type="button" onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none cursor-pointer">
+                            <span>${faq.question}</span>
+                            <i id="faqIcon-${index}" class="fa-solid fa-chevron-down text-rose-500 transition transform"></i>
+                        </button>
+                        <div id="faqAns-${index}" class="hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3">
+                            ${faq.answer}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleFaq(index) {
+            const ans = document.getElementById(`faqAns-${index}`);
+            const icon = document.getElementById(`faqIcon-${index}`);
+            ans.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function openAdminModal() { 
+            document.getElementById('adminModal').classList.remove('hidden'); 
+        }
+        
+        function closeAdminModal() { 
+            document.getElementById('adminModal').classList.add('hidden'); 
+            document.getElementById('adminPasswordInput').value = ''; 
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === 'ale_naildesigner') {
+                closeAdminModal();
+                openAdminDashboard();
+            } else {
+                showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
+            }
+        }
+
+        function openAdminDashboard() {
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            updateAdminDashboard();
+        }
+
+        function closeAdminDashboard() { 
+            document.getElementById('adminDashboard').classList.add('hidden'); 
+        }
+
+        function updateAdminDashboard() {
+            const servList = window.services.length > 0 ? window.services : defaultServices;
+            const galList = window.gallery.length > 0 ? window.gallery : defaultGallery;
+
+            document.getElementById('statServicesCount').innerText = servList.length;
+            document.getElementById('statGalleryCount').innerText = galList.length;
+
+            const tbody = document.getElementById('adminServicesTableBody');
+            tbody.innerHTML = '';
+            servList.forEach(serv => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
+                            <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
+                            <span>${serv.name}</span>
+                        </td>
+                        <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
+                        <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
+                        <td class="py-3 px-4 text-right space-x-2">
+                            <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition cursor-pointer" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition cursor-pointer" title="Excluir">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            const grid = document.getElementById('adminGalleryGrid');
+            grid.innerHTML = '';
+            galList.forEach(item => {
+                grid.innerHTML += `
+                    <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
+                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
+                            <span class="text-white text-xs font-semibold truncate">${item.title}</span>
+                            <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs cursor-pointer" title="Remover Foto">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openServiceModal(isEdit = false, id = null) {
+            document.getElementById('serviceModal').classList.remove('hidden');
+            const servList = window.services.length > 0 ? window.services : defaultServices;
+            if (isEdit && id) {
+                document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
+                const serv = servList.find(s => s.id === id);
+                if (serv) {
+                    document.getElementById('serviceEditId').value = serv.id;
+                    document.getElementById('newServiceName').value = serv.name;
+                    document.getElementById('newServiceDesc').value = serv.description;
+                    document.getElementById('newServicePrice').value = serv.price;
+                    document.getElementById('newServiceImg').value = serv.image;
+                }
+            } else {
+                document.getElementById('serviceModalTitle').innerText = "Adicionar Novo Serviço";
+                document.getElementById('serviceEditId').value = '';
+                document.getElementById('newServiceName').value = '';
+                document.getElementById('newServiceDesc').value = '';
+                document.getElementById('newServicePrice').value = '';
+                document.getElementById('newServiceImg').value = '';
+            }
+        }
+
+        function closeServiceModal() { 
+            document.getElementById('serviceModal').classList.add('hidden'); 
+        }
+
+        function openGalleryModal() { 
+            document.getElementById('galleryModal').classList.remove('hidden'); 
+            document.getElementById('newGalleryTitle').value = '';
+            document.getElementById('newGalleryUrl').value = '';
+            document.getElementById('galleryFileInput').value = '';
+            window.uploadedFileBase64 = '';
+        }
+
+        function closeGalleryModal() { 
+            document.getElementById('galleryModal').classList.add('hidden'); 
+        }
+
+        function previewFileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    window.uploadedFileBase64 = e.target.result;
+                    document.getElementById('newGalleryUrl').value = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showCustomConfirm(title, message, onConfirm) {
+            document.getElementById('customModalTitle').innerText = title;
+            document.getElementById('customModalText').innerText = message;
+            const confirmBtn = document.getElementById('customModalConfirm');
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.onclick = function() {
+                closeCustomModal();
+                onConfirm();
+            };
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            renderServices();
+            renderGallery();
+            renderFaq();
+        };
+    </script>
+
+    <!-- SCRIPT DO FIREBASE (LIGAÇÃO À BASE DE DADOS EM SEGUNDO PLANO) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        let currentUser = null;
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -505,7 +739,7 @@
                     });
                 } else {
                     renderServices();
-                    updateAdminDashboard();
+                    if (typeof updateAdminDashboard === 'function') updateAdminDashboard();
                 }
             }, (error) => {
                 console.error("Erro ao carregar serviços:", error);
@@ -524,242 +758,13 @@
                     });
                 } else {
                     renderGallery();
-                    updateAdminDashboard();
+                    if (typeof updateAdminDashboard === 'function') updateAdminDashboard();
                 }
             }, (error) => {
                 console.error("Erro ao carregar galeria:", error);
             });
         }
 
-        // Funções de Renderização Globais
-        window.renderServices = function() {
-            const container = document.getElementById('servicesContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            const listToRender = window.services.length > 0 ? window.services : defaultServices;
-            listToRender.forEach(service => {
-                container.innerHTML += `
-                    <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-rose-100">
-                        <div>
-                            <div class="h-48 overflow-hidden relative bg-rose-100">
-                                <img src="${service.image}" alt="${service.name}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
-                                <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-rose-700 font-bold text-xs px-3 py-1 rounded-full shadow">
-                                    ${service.price}
-                                </span>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold font-serif text-rose-950 mb-2">${service.name}</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed">${service.description}</p>
-                            </div>
-                        </div>
-                        <div class="px-6 pb-6 pt-0">
-                            <a href="https://wa.me/5531992212015?text=Olá%20Alê!%20Gostaria%20de%20agendar%20o%20serviço:%20${encodeURIComponent(service.name)}" 
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="w-full bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white text-sm font-semibold py-2.5 rounded-xl border border-rose-200 transition text-center flex items-center justify-center space-x-2">
-                                <i class="fa-brands fa-whatsapp text-base"></i>
-                                <span>Agendar este serviço</span>
-                            </a>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.renderGallery = function() {
-            const container = document.getElementById('galleryContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            const listToRender = window.gallery.length > 0 ? window.gallery : defaultGallery;
-            listToRender.forEach(item => {
-                container.innerHTML += `
-                    <div class="rounded-2xl overflow-hidden shadow-md group relative h-64 bg-rose-100">
-                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-rose-950/70 via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
-                            <span class="text-white text-sm font-medium">${item.title}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderFaq() {
-            const container = document.getElementById('faqContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            faqs.forEach((faq, index) => {
-                container.innerHTML += `
-                    <div class="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
-                        <button onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none">
-                            <span>${faq.question}</span>
-                            <i id="faqIcon-${index}" class="fa-solid fa-chevron-down text-rose-500 transition transform"></i>
-                        </button>
-                        <div id="faqAns-${index}" class="hidden px-6 pb-4 text-slate-600 text-sm leading-relaxed border-t border-slate-50 pt-3">
-                            ${faq.answer}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.toggleFaq = function(index) {
-            const ans = document.getElementById(`faqAns-${index}`);
-            const icon = document.getElementById(`faqIcon-${index}`);
-            ans.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-        }
-
-        window.toggleMobileMenu = function() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
-        // Controlo de Modais Administrativos
-        window.openAdminModal = function() { 
-            document.getElementById('adminModal').classList.remove('hidden'); 
-        }
-        
-        window.closeAdminModal = function() { 
-            document.getElementById('adminModal').classList.add('hidden'); 
-            document.getElementById('adminPasswordInput').value = ''; 
-        }
-
-        window.handleAdminLogin = function(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPasswordInput').value;
-            if (pass === 'ale_naildesigner') {
-                closeAdminModal();
-                openAdminDashboard();
-            } else {
-                showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
-            }
-        }
-
-        window.openAdminDashboard = function() {
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            updateAdminDashboard();
-        }
-
-        window.closeAdminDashboard = function() { 
-            document.getElementById('adminDashboard').classList.add('hidden'); 
-        }
-
-        window.updateAdminDashboard = function() {
-            const servList = window.services.length > 0 ? window.services : defaultServices;
-            const galList = window.gallery.length > 0 ? window.gallery : defaultGallery;
-
-            document.getElementById('statServicesCount').innerText = servList.length;
-            document.getElementById('statGalleryCount').innerText = galList.length;
-
-            const tbody = document.getElementById('adminServicesTableBody');
-            tbody.innerHTML = '';
-            servList.forEach(serv => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
-                            <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
-                            <span>${serv.name}</span>
-                        </td>
-                        <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
-                        <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
-                        <td class="py-3 px-4 text-right space-x-2">
-                            <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition" title="Editar">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition" title="Excluir">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            const grid = document.getElementById('adminGalleryGrid');
-            grid.innerHTML = '';
-            galList.forEach(item => {
-                grid.innerHTML += `
-                    <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
-                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
-                            <span class="text-white text-xs font-semibold truncate">${item.title}</span>
-                            <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs" title="Remover Foto">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.openServiceModal = function(isEdit = false, id = null) {
-            document.getElementById('serviceModal').classList.remove('hidden');
-            const servList = window.services.length > 0 ? window.services : defaultServices;
-            if (isEdit && id) {
-                document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
-                const serv = servList.find(s => s.id === id);
-                if (serv) {
-                    document.getElementById('serviceEditId').value = serv.id;
-                    document.getElementById('newServiceName').value = serv.name;
-                    document.getElementById('newServiceDesc').value = serv.description;
-                    document.getElementById('newServicePrice').value = serv.price;
-                    document.getElementById('newServiceImg').value = serv.image;
-                }
-            } else {
-                document.getElementById('serviceModalTitle').innerText = "Adicionar Novo Serviço";
-                document.getElementById('serviceEditId').value = '';
-                document.getElementById('newServiceName').value = '';
-                document.getElementById('newServiceDesc').value = '';
-                document.getElementById('newServicePrice').value = '';
-                document.getElementById('newServiceImg').value = '';
-            }
-        }
-
-        window.closeServiceModal = function() { 
-            document.getElementById('serviceModal').classList.add('hidden'); 
-        }
-
-        window.openGalleryModal = function() { 
-            document.getElementById('galleryModal').classList.remove('hidden'); 
-            document.getElementById('newGalleryTitle').value = '';
-            document.getElementById('newGalleryUrl').value = '';
-            document.getElementById('galleryFileInput').value = '';
-            window.uploadedFileBase64 = '';
-        }
-
-        window.closeGalleryModal = function() { 
-            document.getElementById('galleryModal').classList.add('hidden'); 
-        }
-
-        window.previewFileImage = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    window.uploadedFileBase64 = e.target.result;
-                    document.getElementById('newGalleryUrl').value = '';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        window.showCustomConfirm = function(title, message, onConfirm) {
-            document.getElementById('customModalTitle').innerText = title;
-            document.getElementById('customModalText').innerText = message;
-            const confirmBtn = document.getElementById('customModalConfirm');
-            const newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-            
-            newConfirmBtn.onclick = function() {
-                closeCustomModal();
-                onConfirm();
-            };
-            document.getElementById('customModal').classList.remove('hidden');
-        }
-
-        window.closeCustomModal = function() {
-            document.getElementById('customModal').classList.add('hidden');
-        }
-
-        // Funções de Gravação e Eliminação na Base de Dados (Cloud)
         window.handleSaveService = async function(e) {
             e.preventDefault();
             if (!currentUser) return;
@@ -790,7 +795,7 @@
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', id));
                 } catch (err) {
-                    console.error("Erro ao excluir serviço:", err);
+                    console.error("Erro-remover:", err);
                 }
             });
         }
@@ -826,17 +831,10 @@
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', id));
                 } catch (err) {
-                    console.error("Erro ao remover foto:", err);
+                    console.error("Erro-remover:", err);
                 }
             });
         }
-
-        // Execução inicial ao carregar a página
-        window.onload = function() {
-            renderServices();
-            renderGallery();
-            renderFaq();
-        };
     </script>
 </body>
 </html>

@@ -405,7 +405,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT GLOBAL DE INTERFACE (GARANTE QUE OS BOTÕES E O MENU FUNCIONAM SEMPRE) -->
+    <!-- SCRIPT GLOBAL DE INTERFACE E ACÇÕES DE ADMINISTRAÇÃO -->
     <script>
         window.services = [];
         window.gallery = [];
@@ -689,7 +689,7 @@
         };
     </script>
 
-    <!-- SCRIPT DO FIREBASE (LIGAÇÃO À BASE DE DADOS EM SEGUNDO PLANO) -->
+    <!-- SCRIPT DO FIREBASE (LIGAÇÃO À BASE DE DADOS E AÇÕES DE GRAVAÇÃO/ELIMINAÇÃO) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -765,6 +765,7 @@
             });
         }
 
+        // Funções Globais expostas para Editar e Excluir na Nuvem
         window.handleSaveService = async function(e) {
             e.preventDefault();
             if (!currentUser) return;
@@ -795,7 +796,7 @@
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', id));
                 } catch (err) {
-                    console.error("Erro-remover:", err);
+                    console.error("Erro ao excluir serviço:", err);
                 }
             });
         }
@@ -831,7 +832,7 @@
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', id));
                 } catch (err) {
-                    console.error("Erro-remover:", err);
+                    console.error("Erro ao remover foto:", err);
                 }
             });
         }

@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -405,11 +405,17 @@
         </div>
     </div>
 
-    <!-- SCRIPT GLOBAL PARA INTERAÇÕES E MODAIS -->
-    <script>
-        let services = [];
-        let gallery = [];
-        let uploadedFileBase64 = '';
+    <!-- SCRIPT UNIFICADO: INTERAÇÕES, MODAIS E BASE DE DADOS -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Variáveis globais acessíveis a toda a página
+        window.services = [];
+        window.gallery = [];
+        window.uploadedFileBase64 = '';
+        let currentUser = null;
 
         const defaultServices = [
             {
@@ -455,11 +461,82 @@
             { question: "Os materiais são esterilizados?", answer: "Sim, utilizamos autoclave e materiais descartáveis ou esterilizados individualmente." }
         ];
 
-        function renderServices() {
+        // Inicialização do Firebase
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Erro na autenticação:", err);
+            }
+        }
+
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                setupFirestoreListeners();
+            }
+        });
+
+        function setupFirestoreListeners() {
+            if (!currentUser) return;
+
+            const servicesCol = collection(db, 'artifacts', appId, 'public', 'data', 'services_db');
+            onSnapshot(servicesCol, (snapshot) => {
+                window.services = [];
+                snapshot.forEach(docSnap => {
+                    window.services.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                if (window.services.length === 0) {
+                    defaultServices.forEach(serv => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serv.id), serv);
+                    });
+                } else {
+                    renderServices();
+                    updateAdminDashboard();
+                }
+            }, (error) => {
+                console.error("Erro ao carregar serviços:", error);
+            });
+
+            const galleryCol = collection(db, 'artifacts', appId, 'public', 'data', 'gallery_db');
+            onSnapshot(galleryCol, (snapshot) => {
+                window.gallery = [];
+                snapshot.forEach(docSnap => {
+                    window.gallery.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                if (window.gallery.length === 0) {
+                    defaultGallery.forEach(item => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', item.id), item);
+                    });
+                } else {
+                    renderGallery();
+                    updateAdminDashboard();
+                }
+            }, (error) => {
+                console.error("Erro ao carregar galeria:", error);
+            });
+        }
+
+        // Funções de Renderização Globais
+        window.renderServices = function() {
             const container = document.getElementById('servicesContainer');
             if (!container) return;
             container.innerHTML = '';
-            const listToRender = services.length > 0 ? services : defaultServices;
+            const listToRender = window.services.length > 0 ? window.services : defaultServices;
             listToRender.forEach(service => {
                 container.innerHTML += `
                     <div class="glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-rose-100">
@@ -489,11 +566,11 @@
             });
         }
 
-        function renderGallery() {
+        window.renderGallery = function() {
             const container = document.getElementById('galleryContainer');
             if (!container) return;
             container.innerHTML = '';
-            const listToRender = gallery.length > 0 ? gallery : defaultGallery;
+            const listToRender = window.gallery.length > 0 ? window.gallery : defaultGallery;
             listToRender.forEach(item => {
                 container.innerHTML += `
                     <div class="rounded-2xl overflow-hidden shadow-md group relative h-64 bg-rose-100">
@@ -525,27 +602,28 @@
             });
         }
 
-        function toggleFaq(index) {
+        window.toggleFaq = function(index) {
             const ans = document.getElementById(`faqAns-${index}`);
             const icon = document.getElementById(`faqIcon-${index}`);
             ans.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         }
 
-        function toggleMobileMenu() {
+        window.toggleMobileMenu = function() {
             document.getElementById('mobileMenu').classList.toggle('hidden');
         }
 
-        function openAdminModal() { 
+        // Controlo de Modais Administrativos
+        window.openAdminModal = function() { 
             document.getElementById('adminModal').classList.remove('hidden'); 
         }
         
-        function closeAdminModal() { 
+        window.closeAdminModal = function() { 
             document.getElementById('adminModal').classList.add('hidden'); 
             document.getElementById('adminPasswordInput').value = ''; 
         }
 
-        function handleAdminLogin(e) {
+        window.handleAdminLogin = function(e) {
             e.preventDefault();
             const pass = document.getElementById('adminPasswordInput').value;
             if (pass === 'ale_naildesigner') {
@@ -556,18 +634,18 @@
             }
         }
 
-        function openAdminDashboard() {
+        window.openAdminDashboard = function() {
             document.getElementById('adminDashboard').classList.remove('hidden');
             updateAdminDashboard();
         }
 
-        function closeAdminDashboard() { 
+        window.closeAdminDashboard = function() { 
             document.getElementById('adminDashboard').classList.add('hidden'); 
         }
 
-        function updateAdminDashboard() {
-            const servList = services.length > 0 ? services : defaultServices;
-            const galList = gallery.length > 0 ? gallery : defaultGallery;
+        window.updateAdminDashboard = function() {
+            const servList = window.services.length > 0 ? window.services : defaultServices;
+            const galList = window.gallery.length > 0 ? window.gallery : defaultGallery;
 
             document.getElementById('statServicesCount').innerText = servList.length;
             document.getElementById('statGalleryCount').innerText = galList.length;
@@ -612,9 +690,9 @@
             });
         }
 
-        function openServiceModal(isEdit = false, id = null) {
+        window.openServiceModal = function(isEdit = false, id = null) {
             document.getElementById('serviceModal').classList.remove('hidden');
-            const servList = services.length > 0 ? services : defaultServices;
+            const servList = window.services.length > 0 ? window.services : defaultServices;
             if (isEdit && id) {
                 document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
                 const serv = servList.find(s => s.id === id);
@@ -635,35 +713,35 @@
             }
         }
 
-        function closeServiceModal() { 
+        window.closeServiceModal = function() { 
             document.getElementById('serviceModal').classList.add('hidden'); 
         }
 
-        function openGalleryModal() { 
+        window.openGalleryModal = function() { 
             document.getElementById('galleryModal').classList.remove('hidden'); 
             document.getElementById('newGalleryTitle').value = '';
             document.getElementById('newGalleryUrl').value = '';
             document.getElementById('galleryFileInput').value = '';
-            uploadedFileBase64 = '';
+            window.uploadedFileBase64 = '';
         }
 
-        function closeGalleryModal() { 
+        window.closeGalleryModal = function() { 
             document.getElementById('galleryModal').classList.add('hidden'); 
         }
 
-        function previewFileImage(event) {
+        window.previewFileImage = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    uploadedFileBase64 = e.target.result;
+                    window.uploadedFileBase64 = e.target.result;
                     document.getElementById('newGalleryUrl').value = '';
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function showCustomConfirm(title, message, onConfirm) {
+        window.showCustomConfirm = function(title, message, onConfirm) {
             document.getElementById('customModalTitle').innerText = title;
             document.getElementById('customModalText').innerText = message;
             const confirmBtn = document.getElementById('customModalConfirm');
@@ -677,94 +755,11 @@
             document.getElementById('customModal').classList.remove('hidden');
         }
 
-        function closeCustomModal() {
+        window.closeCustomModal = function() {
             document.getElementById('customModal').classList.add('hidden');
         }
 
-        window.onload = function() {
-            renderServices();
-            renderGallery();
-            renderFaq();
-        };
-    </script>
-
-    <!-- SCRIPT DO FIREBASE PARA SINCRONIZAÇÃO EM TEMPO REAL -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        let currentUser = null;
-
-        async function initAuth() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.error("Erro na autenticação:", err);
-            }
-        }
-
-        initAuth();
-
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            if (user) {
-                setupFirestoreListeners();
-            }
-        });
-
-        function setupFirestoreListeners() {
-            if (!currentUser) return;
-
-            const servicesCol = collection(db, 'artifacts', appId, 'public', 'data', 'services_db');
-            onSnapshot(servicesCol, (snapshot) => {
-                services = [];
-                snapshot.forEach(docSnap => {
-                    services.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                if (services.length === 0) {
-                    defaultServices.forEach(serv => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serv.id), serv);
-                    });
-                } else {
-                    renderServices();
-                    updateAdminDashboard();
-                }
-            }, (error) => {
-                console.error("Erro ao carregar serviços:", error);
-            });
-
-            const galleryCol = collection(db, 'artifacts', appId, 'public', 'data', 'gallery_db');
-            onSnapshot(galleryCol, (snapshot) => {
-                gallery = [];
-                snapshot.forEach(docSnap => {
-                    gallery.push({ id: docSnap.id, ...docSnap.data() });
-                });
-
-                if (gallery.length === 0) {
-                    defaultGallery.forEach(item => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', item.id), item);
-                    });
-                } else {
-                    renderGallery();
-                    updateAdminDashboard();
-                }
-            }, (error) => {
-                console.error("Erro ao carregar galeria:", error);
-            });
-        }
-
+        // Funções de Gravação e Eliminação na Base de Dados (Cloud)
         window.handleSaveService = async function(e) {
             e.preventDefault();
             if (!currentUser) return;
@@ -805,7 +800,7 @@
             if (!currentUser) return;
             const titleVal = document.getElementById('newGalleryTitle').value;
             const urlInput = document.getElementById('newGalleryUrl').value;
-            const finalImageUrl = uploadedFileBase64 || urlInput;
+            const finalImageUrl = window.uploadedFileBase64 || urlInput;
 
             if (!finalImageUrl) {
                 showCustomConfirm("Aviso", "Por favor, selecione uma foto do dispositivo ou insira uma URL válida.", () => {});
@@ -819,7 +814,7 @@
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', galleryId), galleryData);
                 closeGalleryModal();
                 e.target.reset();
-                uploadedFileBase64 = '';
+                window.uploadedFileBase64 = '';
             } catch (err) {
                 console.error("Erro ao guardar foto:", err);
             }
@@ -835,6 +830,13 @@
                 }
             });
         }
+
+        // Execução inicial ao carregar a página
+        window.onload = function() {
+            renderServices();
+            renderGallery();
+            renderFaq();
+        };
     </script>
 </body>
 </html>

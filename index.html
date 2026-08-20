@@ -569,47 +569,53 @@
             const servList = window.services.length > 0 ? window.services : defaultServices;
             const galList = window.gallery.length > 0 ? window.gallery : defaultGallery;
 
-            document.getElementById('statServicesCount').innerText = servList.length;
-            document.getElementById('statGalleryCount').innerText = galList.length;
+            const statServ = document.getElementById('statServicesCount');
+            const statGal = document.getElementById('statGalleryCount');
+            if (statServ) statServ.innerText = servList.length;
+            if (statGal) statGal.innerText = galList.length;
 
             const tbody = document.getElementById('adminServicesTableBody');
-            tbody.innerHTML = '';
-            servList.forEach(serv => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
-                            <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
-                            <span>${serv.name}</span>
-                        </td>
-                        <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
-                        <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
-                        <td class="py-3 px-4 text-right space-x-2">
-                            <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition cursor-pointer" title="Editar">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition cursor-pointer" title="Excluir">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
+            if (tbody) {
+                tbody.innerHTML = '';
+                servList.forEach(serv => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="py-3 px-4 font-semibold text-slate-800 flex items-center space-x-3">
+                                <img src="${serv.image}" class="w-10 h-10 rounded-lg object-cover bg-rose-100">
+                                <span>${serv.name}</span>
+                            </td>
+                            <td class="py-3 px-4 truncate max-w-xs">${serv.description}</td>
+                            <td class="py-3 px-4 font-bold text-rose-600">${serv.price}</td>
+                            <td class="py-3 px-4 text-right space-x-2">
+                                <button type="button" onclick="editService('${serv.id}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded-lg transition cursor-pointer" title="Editar">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button type="button" onclick="deleteService('${serv.id}')" class="text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 p-2 rounded-lg transition cursor-pointer" title="Excluir">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
 
             const grid = document.getElementById('adminGalleryGrid');
-            grid.innerHTML = '';
-            galList.forEach(item => {
-                grid.innerHTML += `
-                    <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
-                        <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
-                            <span class="text-white text-xs font-semibold truncate">${item.title}</span>
-                            <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs cursor-pointer" title="Remover Foto">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+            if (grid) {
+                grid.innerHTML = '';
+                galList.forEach(item => {
+                    grid.innerHTML += `
+                        <div class="rounded-xl overflow-hidden shadow-sm border border-slate-200 relative group h-36 bg-white">
+                            <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-3">
+                                <span class="text-white text-xs font-semibold truncate">${item.title}</span>
+                                <button type="button" onclick="deleteGalleryItem('${item.id}')" class="self-end bg-rose-600 hover:bg-rose-700 text-white p-2 rounded-lg text-xs cursor-pointer" title="Remover Foto">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
         }
 
         function openServiceModal(isEdit = false, id = null) {
@@ -727,18 +733,19 @@
 
             const servicesCol = collection(db, 'artifacts', appId, 'public', 'data', 'services_db');
             onSnapshot(servicesCol, (snapshot) => {
-                window.services = [];
+                const loadedServices = [];
                 snapshot.forEach(docSnap => {
-                    window.services.push({ id: docSnap.id, ...docSnap.data() });
+                    loadedServices.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                if (window.services.length === 0) {
+                if (loadedServices.length === 0) {
                     defaultServices.forEach(serv => {
                         setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serv.id), serv);
                     });
                 } else {
+                    window.services = loadedServices;
                     renderServices();
-                    if (typeof updateAdminDashboard === 'function') updateAdminDashboard();
+                    updateAdminDashboard();
                 }
             }, (error) => {
                 console.error("Erro ao carregar serviços:", error);
@@ -746,25 +753,25 @@
 
             const galleryCol = collection(db, 'artifacts', appId, 'public', 'data', 'gallery_db');
             onSnapshot(galleryCol, (snapshot) => {
-                window.gallery = [];
+                const loadedGallery = [];
                 snapshot.forEach(docSnap => {
-                    window.gallery.push({ id: docSnap.id, ...docSnap.data() });
+                    loadedGallery.push({ id: docSnap.id, ...docSnap.data() });
                 });
 
-                if (window.gallery.length === 0) {
+                if (loadedGallery.length === 0) {
                     defaultGallery.forEach(item => {
                         setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', item.id), item);
                     });
                 } else {
+                    window.gallery = loadedGallery;
                     renderGallery();
-                    if (typeof updateAdminDashboard === 'function') updateAdminDashboard();
+                    updateAdminDashboard();
                 }
             }, (error) => {
                 console.error("Erro ao carregar galeria:", error);
             });
         }
 
-        // Funções Globais expostas na window para interagir com a UI e o Firestore
         window.handleSaveService = async function(e) {
             e.preventDefault();
             if (!currentUser) return;

@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -411,6 +410,7 @@
         window.services = [];
         window.gallery = [];
         window.uploadedFileBase64 = '';
+        window.isFirebaseInitialized = false;
 
         const defaultServices = [
             {
@@ -514,7 +514,7 @@
             faqs.forEach((faq, index) => {
                 container.innerHTML += `
                     <div class="border border-rose-100 rounded-2xl overflow-hidden bg-white shadow-sm">
-                        <button type="button" onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none cursor-pointer">
+                        <button type="button" onclick="window.toggleFaq(${index})" class="w-full px-6 py-4 text-left font-semibold text-rose-950 flex justify-between items-center focus:outline-none cursor-pointer">
                             <span>${faq.question}</span>
                             <i id="faqIcon-${index}" class="fa-solid fa-chevron-down text-rose-500 transition transform"></i>
                         </button>
@@ -526,48 +526,56 @@
             });
         }
 
-        function toggleFaq(index) {
+        window.toggleFaq = function(index) {
             const ans = document.getElementById(`faqAns-${index}`);
             const icon = document.getElementById(`faqIcon-${index}`);
-            ans.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-        }
-
-        function openAdminModal() { 
-            document.getElementById('adminModal').classList.remove('hidden'); 
-        }
-        
-        function closeAdminModal() { 
-            document.getElementById('adminModal').classList.add('hidden'); 
-            document.getElementById('adminPasswordInput').value = ''; 
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPasswordInput').value;
-            if (pass === 'ale_naildesigner') {
-                closeAdminModal();
-                openAdminDashboard();
-            } else {
-                showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
+            if (ans && icon) {
+                ans.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
             }
         }
 
-        function openAdminDashboard() {
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            updateAdminDashboard();
+        window.toggleMobileMenu = function() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu) menu.classList.toggle('hidden');
         }
 
-        function closeAdminDashboard() { 
-            document.getElementById('adminDashboard').classList.add('hidden'); 
+        window.openAdminModal = function() { 
+            const m = document.getElementById('adminModal');
+            if (m) m.classList.remove('hidden'); 
+        }
+        
+        window.closeAdminModal = function() { 
+            const m = document.getElementById('adminModal');
+            if (m) m.classList.add('hidden'); 
+            const input = document.getElementById('adminPasswordInput');
+            if (input) input.value = ''; 
         }
 
-        function updateAdminDashboard() {
+        window.handleAdminLogin = function(e) {
+            e.preventDefault();
+            const passElem = document.getElementById('adminPasswordInput');
+            const pass = passElem ? passElem.value : '';
+            if (pass === 'ale_naildesigner') {
+                window.closeAdminModal();
+                window.openAdminDashboard();
+            } else {
+                window.showCustomConfirm("Erro de Acesso", "Palavra-passe incorreta! A palavra-passe correta é ale_naildesigner", () => {});
+            }
+        }
+
+        window.openAdminDashboard = function() {
+            const dash = document.getElementById('adminDashboard');
+            if (dash) dash.classList.remove('hidden');
+            window.updateAdminDashboard();
+        }
+
+        window.closeAdminDashboard = function() { 
+            const dash = document.getElementById('adminDashboard');
+            if (dash) dash.classList.add('hidden'); 
+        }
+
+        window.updateAdminDashboard = function() {
             const servList = window.services.length > 0 ? window.services : defaultServices;
             const galList = window.gallery.length > 0 ? window.gallery : defaultGallery;
 
@@ -625,11 +633,13 @@
             }
         }
 
-        function openServiceModal(isEdit = false, id = null) {
-            document.getElementById('serviceModal').classList.remove('hidden');
+        window.openServiceModal = function(isEdit = false, id = null) {
+            const m = document.getElementById('serviceModal');
+            if (m) m.classList.remove('hidden');
             const servList = window.services.length > 0 ? window.services : defaultServices;
+            const titleElem = document.getElementById('serviceModalTitle');
             if (isEdit && id) {
-                document.getElementById('serviceModalTitle').innerText = "Editar Serviço";
+                if (titleElem) titleElem.innerText = "Editar Serviço";
                 const serv = servList.find(s => s.id === id);
                 if (serv) {
                     document.getElementById('serviceEditId').value = serv.id;
@@ -639,7 +649,7 @@
                     document.getElementById('newServiceImg').value = serv.image;
                 }
             } else {
-                document.getElementById('serviceModalTitle').innerText = "Adicionar Novo Serviço";
+                if (titleElem) titleElem.innerText = "Adicionar Novo Serviço";
                 document.getElementById('serviceEditId').value = '';
                 document.getElementById('newServiceName').value = '';
                 document.getElementById('newServiceDesc').value = '';
@@ -648,15 +658,18 @@
             }
         }
 
-        function closeServiceModal() { 
-            document.getElementById('serviceModal').classList.add('hidden'); 
+        window.closeServiceModal = function() { 
+            const m = document.getElementById('serviceModal');
+            if (m) m.classList.add('hidden'); 
         }
 
-        function openGalleryModal(isEdit = false, id = null) { 
-            document.getElementById('galleryModal').classList.remove('hidden'); 
+        window.openGalleryModal = function(isEdit = false, id = null) { 
+            const m = document.getElementById('galleryModal');
+            if (m) m.classList.remove('hidden'); 
             const galList = window.gallery.length > 0 ? window.gallery : defaultGallery;
+            const titleElem = document.getElementById('galleryModalTitle');
             if (isEdit && id) {
-                document.getElementById('galleryModalTitle').innerText = "Editar Foto da Galeria";
+                if (titleElem) titleElem.innerText = "Editar Foto da Galeria";
                 const item = galList.find(g => g.id === id);
                 if (item) {
                     document.getElementById('galleryEditId').value = item.id;
@@ -664,7 +677,7 @@
                     document.getElementById('newGalleryUrl').value = item.url;
                 }
             } else {
-                document.getElementById('galleryModalTitle').innerText = "Adicionar Foto à Galeria";
+                if (titleElem) titleElem.innerText = "Adicionar Foto à Galeria";
                 document.getElementById('galleryEditId').value = '';
                 document.getElementById('newGalleryTitle').value = '';
                 document.getElementById('newGalleryUrl').value = '';
@@ -673,38 +686,46 @@
             }
         }
 
-        function closeGalleryModal() { 
-            document.getElementById('galleryModal').classList.add('hidden'); 
+        window.closeGalleryModal = function() { 
+            const m = document.getElementById('galleryModal');
+            if (m) m.classList.add('hidden'); 
         }
 
-        function previewFileImage(event) {
+        window.previewFileImage = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     window.uploadedFileBase64 = e.target.result;
-                    document.getElementById('newGalleryUrl').value = '';
+                    const urlInput = document.getElementById('newGalleryUrl');
+                    if (urlInput) urlInput.value = '';
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function showCustomConfirm(title, message, onConfirm) {
-            document.getElementById('customModalTitle').innerText = title;
-            document.getElementById('customModalText').innerText = message;
+        window.showCustomConfirm = function(title, message, onConfirm) {
+            const mTitle = document.getElementById('customModalTitle');
+            const mText = document.getElementById('customModalText');
+            if (mTitle) mTitle.innerText = title;
+            if (mText) mText.innerText = message;
             const confirmBtn = document.getElementById('customModalConfirm');
-            const newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-            
-            newConfirmBtn.onclick = function() {
-                closeCustomModal();
-                onConfirm();
-            };
-            document.getElementById('customModal').classList.remove('hidden');
+            if (confirmBtn) {
+                const newConfirmBtn = confirmBtn.cloneNode(true);
+                confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+                
+                newConfirmBtn.onclick = function() {
+                    window.closeCustomModal();
+                    onConfirm();
+                };
+            }
+            const modal = document.getElementById('customModal');
+            if (modal) modal.classList.remove('hidden');
         }
 
-        function closeCustomModal() {
-            document.getElementById('customModal').classList.add('hidden');
+        window.closeCustomModal = function() {
+            const modal = document.getElementById('customModal');
+            if (modal) modal.classList.add('hidden');
         }
 
         window.onload = function() {
@@ -743,7 +764,8 @@
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
-            if (user) {
+            if (user && !window.isFirebaseInitialized) {
+                window.isFirebaseInitialized = true;
                 setupFirestoreListeners();
             }
         });
@@ -806,18 +828,18 @@
 
             try {
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', serviceId), serviceData);
-                closeServiceModal();
+                window.closeServiceModal();
             } catch (err) {
                 console.error("Erro ao guardar serviço:", err);
             }
         }
 
         window.editService = function(id) { 
-            openServiceModal(true, id); 
+            window.openServiceModal(true, id); 
         }
 
         window.deleteService = function(id) {
-            showCustomConfirm("Excluir Serviço", "Tem a certeza que deseja excluir este serviço?", async () => {
+            window.showCustomConfirm("Excluir Serviço", "Tem a certeza que deseja excluir este serviço?", async () => {
                 if (!currentUser) return;
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'services_db', id));
@@ -838,7 +860,7 @@
             const finalImageUrl = window.uploadedFileBase64 || urlInput || (existingItem ? existingItem.url : '');
 
             if (!finalImageUrl) {
-                showCustomConfirm("Aviso", "Por favor, selecione uma foto ou insira uma URL válida.", () => {});
+                window.showCustomConfirm("Aviso", "Por favor, selecione uma foto ou insira uma URL válida.", () => {});
                 return;
             }
 
@@ -847,7 +869,7 @@
 
             try {
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', galleryId), galleryData);
-                closeGalleryModal();
+                window.closeGalleryModal();
                 e.target.reset();
                 window.uploadedFileBase64 = '';
             } catch (err) {
@@ -856,11 +878,11 @@
         }
 
         window.editGalleryItem = function(id) {
-            openGalleryModal(true, id);
+            window.openGalleryModal(true, id);
         }
 
         window.deleteGalleryItem = function(id) {
-            showCustomConfirm("Remover Foto", "Deseja remover esta foto da galeria?", async () => {
+            window.showCustomConfirm("Remover Foto", "Deseja remover esta foto da galeria?", async () => {
                 if (!currentUser) return;
                 try {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'gallery_db', id));
@@ -872,4 +894,3 @@
     </script>
 </body>
 </html>
-```
